@@ -12,7 +12,7 @@ foreach(PROG matrix_product_float matrix_product_double blas3_solve fft_1d fft_2
              tql vector_float_double vector_int vector_uint vector_multi_inner_prod 
              spmdm)
    add_executable(${PROG}-test-cpu src/${PROG}.cpp)
-   target_link_libraries(${PROG}-test-cpu ${Boost_LIBRARIES})
+   target_link_libraries(${PROG}-test-cpu ${Boost_LIBRARIES} ${COV_LIBRARIES})
    add_test(${PROG}-cpu ${PROG}-test-cpu)
 endforeach(PROG)
 
@@ -29,7 +29,7 @@ if (ENABLE_OPENCL)
                vector_float_double vector_int vector_uint vector_multi_inner_prod
                spmdm)
      add_executable(${PROG}-test-opencl src/${PROG}.cpp)
-     target_link_libraries(${PROG}-test-opencl ${OPENCL_LIBRARIES} ${Boost_LIBRARIES})
+     target_link_libraries(${PROG}-test-opencl ${OPENCL_LIBRARIES} ${Boost_LIBRARIES} ${COV_LIBRARIES})
      add_test(${PROG}-opencl ${PROG}-test-opencl)
      set_target_properties(${PROG}-test-opencl PROPERTIES COMPILE_FLAGS "-DVIENNACL_WITH_OPENCL")
   endforeach(PROG)
@@ -38,7 +38,7 @@ if (ENABLE_OPENCL)
   add_executable(external_linkage-opencl
                  src/external_1.cpp
                  src/external_2.cpp)
-  target_link_libraries(external_linkage-opencl ${OPENCL_LIBRARIES} ${Boost_LIBRARIES})
+  target_link_libraries(external_linkage-opencl ${OPENCL_LIBRARIES} ${Boost_LIBRARIES} ${COV_LIBRARIES})
   set_target_properties(external_linkage-opencl PROPERTIES COMPILE_FLAGS "-DVIENNACL_WITH_OPENCL")
 endif (ENABLE_OPENCL)
 
@@ -53,7 +53,7 @@ if (ENABLE_CUDA)
                vector_float_double vector_int vector_uint vector_multi_inner_prod
                spmdm)
      cuda_add_executable(${PROG}-test-cuda src/${PROG}.cu)
-     target_link_libraries(${PROG}-test-cuda ${Boost_LIBRARIES})
+     target_link_libraries(${PROG}-test-cuda ${Boost_LIBRARIES} ${COV_LIBRARIES})
      add_test(${PROG}-cuda ${PROG}-test-cuda)
   endforeach(PROG)
 
@@ -61,7 +61,7 @@ if (ENABLE_CUDA)
   cuda_add_executable(external_linkage-cuda
                       src/external_1.cu
                       src/external_2.cu)
-  target_link_libraries(external_linkage-cuda ${Boost_LIBRARIES})
+  target_link_libraries(external_linkage-cuda ${Boost_LIBRARIES} ${COV_LIBRARIES})
 endif (ENABLE_CUDA)
 
 # test shared library
@@ -71,23 +71,23 @@ if (ENABLE_CUDA)
   if (ENABLE_OPENCL)
     set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} "-DVIENNACL_WITH_OPENCL") #set flags before setting executable!
     cuda_add_executable(libviennacl_blas1-test src/libviennacl_blas1.cu)
-    target_link_libraries(libviennacl_blas1-test viennacl ${OPENCL_LIBRARIES})
+    target_link_libraries(libviennacl_blas1-test viennacl ${OPENCL_LIBRARIES} ${COV_LIBRARIES})
 
     cuda_add_executable(libviennacl_blas2-test src/libviennacl_blas2.cu)
-    target_link_libraries(libviennacl_blas2-test viennacl ${OPENCL_LIBRARIES})
+    target_link_libraries(libviennacl_blas2-test viennacl ${OPENCL_LIBRARIES} ${COV_LIBRARIES})
 
     cuda_add_executable(libviennacl_blas3-test src/libviennacl_blas3.cu)
-    target_link_libraries(libviennacl_blas3-test viennacl ${OPENCL_LIBRARIES})
+    target_link_libraries(libviennacl_blas3-test viennacl ${OPENCL_LIBRARIES} ${COV_LIBRARIES})
 
   else(ENABLE_OPENCL)
     cuda_add_executable(libviennacl_blas1-test src/libviennacl_blas1.cu)
-    target_link_libraries(libviennacl_blas1-test viennacl)
+    target_link_libraries(libviennacl_blas1-test viennacl ${COV_LIBRARIES})
 
     cuda_add_executable(libviennacl_blas2-test src/libviennacl_blas2.cu)
-    target_link_libraries(libviennacl_blas2-test viennacl)
+    target_link_libraries(libviennacl_blas2-test viennacl ${COV_LIBRARIES})
 
     cuda_add_executable(libviennacl_blas3-test src/libviennacl_blas3.cu)
-    target_link_libraries(libviennacl_blas3-test viennacl)
+    target_link_libraries(libviennacl_blas3-test viennacl ${COV_LIBRARIES})
   endif (ENABLE_OPENCL)
 else(ENABLE_CUDA)
   add_executable(libviennacl_blas1-test src/libviennacl_blas1.cpp)
@@ -95,17 +95,17 @@ else(ENABLE_CUDA)
   add_executable(libviennacl_blas3-test src/libviennacl_blas3.cpp)
   if (ENABLE_OPENCL)
     set_target_properties(libviennacl_blas1-test PROPERTIES COMPILE_FLAGS "-DVIENNACL_WITH_OPENCL")
-    target_link_libraries(libviennacl_blas1-test viennacl ${OPENCL_LIBRARIES})
+    target_link_libraries(libviennacl_blas1-test viennacl ${OPENCL_LIBRARIES} ${COV_LIBRARIES})
 
     set_target_properties(libviennacl_blas2-test PROPERTIES COMPILE_FLAGS "-DVIENNACL_WITH_OPENCL")
-    target_link_libraries(libviennacl_blas2-test viennacl ${OPENCL_LIBRARIES})
+    target_link_libraries(libviennacl_blas2-test viennacl ${OPENCL_LIBRARIES} ${COV_LIBRARIES})
 
     set_target_properties(libviennacl_blas3-test PROPERTIES COMPILE_FLAGS "-DVIENNACL_WITH_OPENCL")
-    target_link_libraries(libviennacl_blas3-test viennacl ${OPENCL_LIBRARIES})
+    target_link_libraries(libviennacl_blas3-test viennacl ${OPENCL_LIBRARIES} ${COV_LIBRARIES})
   else(ENABLE_OPENCL)
-    target_link_libraries(libviennacl_blas1-test viennacl)
-    target_link_libraries(libviennacl_blas2-test viennacl)
-    target_link_libraries(libviennacl_blas3-test viennacl)
+    target_link_libraries(libviennacl_blas1-test viennacl ${COV_LIBRARIES})
+    target_link_libraries(libviennacl_blas2-test viennacl ${COV_LIBRARIES})
+    target_link_libraries(libviennacl_blas3-test viennacl ${COV_LIBRARIES})
   endif (ENABLE_OPENCL)
 endif (ENABLE_CUDA)
 add_test(libviennacl-blas1 libviennacl_blas1-test)

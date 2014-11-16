@@ -8,12 +8,12 @@ before_install:
 script:
 - mkdir -p build
 - cd build
-- cmake ..
-- make -j4
+- cmake -DENABLE_COVERAGE:BOOL=ON ..
+- make -j2
 - ./examples/tutorial/viennacl-info
-- ctest -j4 --output-on-failure
+- ctest -j2 --output-on-failure
 after_success:
-- lcov -d test -base-directory .. -c -o coverage.info
+- lcov -d tests -base-directory .. -c -o coverage.info
 - lcov --remove coverage.info '/usr*' -o coverage.info
 - cd ..
 - coveralls-lcov build/coverage.info

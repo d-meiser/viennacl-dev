@@ -37,6 +37,8 @@ option(ENABLE_OPENCL "Use the OpenCL backend" ON)
 
 option(ENABLE_OPENMP "Use OpenMP acceleration" OFF)
 
+option(ENABLE_COVERAGE "Whether to generate test coverage data" OFF)
+
 # If you are interested in the impact of different kernel parameters on
 # performance, you may want to give ViennaProfiler a try (see
 # http://sourceforge.net/projects/viennaprofiler/) Set your connection
@@ -142,6 +144,14 @@ if (MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4996")
 endif()
 
+set(COV_LIBRARIES "")
+if(ENABLE_COVERAGE)
+  # DM 11/16/2014: Don't know how to do this for Visual Studio yet.
+  if(CMAKE_COMPILER_IS_GNUCC OR "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftest-coverage -fprofile-arcs")
+    set(COV_LIBRARIES gcov)
+  endif()
+endif()
 
 # Export
 ########
