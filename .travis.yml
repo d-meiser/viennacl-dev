@@ -11,7 +11,7 @@ script:
 - cmake -DENABLE_COVERAGE:BOOL=ON -DENABLE_PEDANTIC_FLAGS:BOOL=ON ..
 - make -j3
 - ./examples/tutorial/viennacl-info
-- ctest -j4 --output-on-failure
+- ctest -j8 --output-on-failure
 after_success:
 - lcov -d tests -base-directory .. -c -o coverage.info
 - lcov --remove coverage.info '/usr*' -o coverage.info
