@@ -8,10 +8,10 @@ before_install:
 script:
 - mkdir -p build
 - cd build
-- cmake -DENABLE_COVERAGE:BOOL=ON ..
-- make -j2
+- cmake -DENABLE_COVERAGE:BOOL=ON -DENABLE_PEDANTIC_FLAGS:BOOL=ON ..
+- make -j3
 - ./examples/tutorial/viennacl-info
-- ctest -j2 --output-on-failure
+- ctest -j4 --output-on-failure
 after_success:
 - lcov -d tests -base-directory .. -c -o coverage.info
 - lcov --remove coverage.info '/usr*' -o coverage.info
